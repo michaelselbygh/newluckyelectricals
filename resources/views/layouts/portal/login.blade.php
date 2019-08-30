@@ -58,22 +58,6 @@
                                     </div>
                                     <div class="card-content">
                                         <div class="card-body" style="padding-top: 0px; padding-bottom: 15px;">
-                                            {{-- @if(\Session::has('error'))
-                                                <div class="alert round bg-danger alert-dismissible mb-2" style="text-align: center;" role="alert">
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                    {{\Session::get('error')}}
-                                                </div>
-                                            @endif
-                                            @if (session('message'))
-                                                <div class="alert alert-success alert-dismissible mb-2" role="alert">
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                    {{ session('message') }}
-                                                </div>
-                                            @endif --}}
                                             @yield('login')
                                         </div>
                                     </div>

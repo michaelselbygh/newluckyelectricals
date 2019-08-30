@@ -372,7 +372,7 @@ form .form-section i {
 }
 
 form .form-actions {
-  padding: 20px 0;
+  padding: 5px 0;
 }
 
 form .form-actions.filled {
@@ -2286,7 +2286,7 @@ body.vertical-layout.menu-open .main-menu .navigation .navigation-header .nav-me
 }
 
 .pagination .page-link {
-  color: #f68b1e;
+  color: #197852 ;
   border: 1px solid #babfc7;
 }
 

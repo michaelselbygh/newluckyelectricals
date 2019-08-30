@@ -60,7 +60,21 @@
                         <li class="nav-item" >
                             <a class="navbar-brand" href="{{ route('manager.dashboard')}}">
                                 <img class="brand-logo" alt="Solushop Icon" style="height:30px; width:auto" src="{{ url('portal/images/logo/icon.png') }}">
-                                <h5 class="brand-text">Manager</h5>
+                                <h5 class="brand-text">
+                                    @switch(Auth::user()->role)
+                                        @case(1)
+                                            Administrator
+                                            @break
+                                        @case(2)
+                                            Application Manager
+                                            @break
+                                        @case(3)
+                                            Content Manager
+                                            @break
+                                        @default
+                                            
+                                    @endswitch
+                                </h5>
                             </a>
                         </li>
                         <li class="nav-item d-md-none"><a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="la la-ellipsis-v"></i></a></li>

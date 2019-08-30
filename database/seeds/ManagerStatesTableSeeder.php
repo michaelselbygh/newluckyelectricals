@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class RolesTableSeeder extends Seeder
+class ManagerStatesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,22 +11,22 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('roles')->insert([
+        \DB::table('manager_states')->insert([
             [
-                'name' => 'Administrator',
-                'description' => 'Administrates Developments and Software Updates',
+                'description' => 'Active',
+                'html_description' => "<span style='color:green;'> Active </span> ",
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at' => \Carbon\Carbon::now(),
             ],
             [
-                'name' => 'Application Manager',
-                'description' => 'Manages Software Settings and Management Staff.',
+                'description' => 'Inactive',
+                'html_description' => "<span style='color:orange;'> Inactive </span> ",
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at' => \Carbon\Carbon::now(),
             ],
             [
-                'name' => 'Content Manager',
-                'description' => 'Manages Products and Categories',
+                'description' => 'Deleted',
+                'html_description' => "<span style='color:red;'> Deleted </span> ",
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at' => \Carbon\Carbon::now(),
             ]

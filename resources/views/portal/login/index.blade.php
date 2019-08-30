@@ -1,7 +1,7 @@
 @extends('layouts.portal.login')
 
 @section('login')
-<form class="form-horizontal form-simple" action="{{ route('manager.process.login') }}" method="POST" >
+    <form class="form-horizontal form-simple" action="{{ route('manager.process.login') }}" method="POST" >
         @csrf
         @include('portal.success-and-error.message')
         <fieldset class="form-group position-relative has-icon-left mb-0">

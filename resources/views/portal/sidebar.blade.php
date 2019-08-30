@@ -36,40 +36,48 @@
                         </li>
                     </ul>
                 </li>
-                <li class=" nav-item"><a href="{{ route('manager.show.users') }}"><i class="la la-user" ></i><span class="menu-title">Users</span></a>
-                    <ul class="menu-content">
-                        <li>
-                            <a class="menu-item" href="{{ route('manager.show.users') }}">
-                                <span>Manage Users</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="menu-item" href="{{ route('manager.show.add.user') }}">
-                                <span>Add User</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route("manager.show.settings") }}">
-                        <i class="la la-cogs" ></i>
-                        <span class="menu-title">Site Settings</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route("manager.show.activity-log") }}">
-                        <i class="la la-server" ></i>
-                        <span class="menu-title">Activity Log</span>
-                    </a>
-                </li>
-                @if (Auth::user())
+                @if (Auth::user()->role <= 2)
+                    <li class=" nav-item"><a href="{{ route('manager.show.users') }}"><i class="la la-user" ></i><span class="menu-title">Users</span></a>
+                        <ul class="menu-content">
+                            <li>
+                                <a class="menu-item" href="{{ route('manager.show.users') }}">
+                                    <span>Manage Users</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="{{ route('manager.show.add.user') }}">
+                                    <span>Add User</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
-                        <a href="{{ route("manager.logout") }}">
-                            <i class="la la-lock"></i>
-                            <span class="menu-title">Logout</span>
+                        <a href="{{ route("manager.show.settings") }}">
+                            <i class="la la-cogs" ></i>
+                            <span class="menu-title">Site Settings</span>
                         </a>
                     </li>
                 @endif
+                @if (Auth::user()->role == 1)
+                    <li class="nav-item">
+                        <a href="{{ route("manager.show.activity-log") }}">
+                            <i class="la la-server" ></i>
+                            <span class="menu-title">Activity Log</span>
+                        </a>
+                    </li>
+                @endif
+                <li class="nav-item">
+                    <a href="{{ route("manager.show.account") }}">
+                        <i class="la la-user"></i>
+                        <span class="menu-title">My Account</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route("manager.logout") }}">
+                        <i class="la la-lock"></i>
+                        <span class="menu-title">Logout</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
