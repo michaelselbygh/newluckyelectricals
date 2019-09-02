@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 /* Validator */
 use Illuminate\Support\Facades\Validator;
 
+/* Input */
+use Illuminate\Support\Facades\Input;
+
+/* Image */
+use Image;
+
 /* Requests */
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateManagerPasswordRequest;
 use App\Http\Requests\AddUserRequest;
 use App\Http\Requests\AddCategoryRequest;
+use App\Http\Requests\AddProductRequest;
 
 /* Activity Log */
 use Spatie\Activitylog\Contracts\Activity; 
@@ -32,6 +39,7 @@ use Illuminate\Support\Facades\Hash;
 /* Models */
 use App\ActivityLog;
 use App\Category;
+use App\Count;
 use App\Manager;
 use App\Product;
 use App\Role;
@@ -109,6 +117,42 @@ class ManagerPagesController extends Controller
         }
 
         switch ($request->user_action) {
+            case 'reset_password':
+                /*- Update Password -*/
+                $password = rand(10000, 99999);
+                $hashed_password = Hash::make($password);
+
+                Manager::where('id', $user_id)
+                    ->update([
+                        "password" => $hashed_password
+                    ]);
+
+                /*- Notify user -*/
+                $user = Manager::where('id', $user_id)->get()->first();
+
+                $data = array(
+                    'subject' => "Password Reset - NewLucky Electricals",
+                    'name' => $user->first_name.' '.$user->last_name,
+                    'message' => "Dear ".$user->first_name.",<br><br>Your user password has been reset. <br>Access your account with this password : $password<br>If you believe this is a mistake, contact your application manager immediately. <br><br>Regards,<br>NewLucky Electricals Software Support"
+                );
+        
+                Mail::to($user->email, $user->first_name.' '.$user->last_name)
+                    ->queue(new Alert($data));
+
+                /*- Log password reset -*/
+                activity()
+                ->causedBy(Manager::where('id', Auth::guard('manager')->user()->id)->get()->first())
+                ->tap(function(Activity $activity) {
+                    $activity->subject_type = 'System';
+                    $activity->subject_id = '0';
+                    $activity->log_name = 'User Password Reset';
+                })
+                ->log(Auth::guard('manager')->user()->email.' reset user password for account '.$user->email.' of '.$user->first_name.' '.$user->last_name.'.');
+ 
+                /*- Return success -*/
+                return back()->with("success", "Password of ".$user->first_name." reset successfully");
+
+                break;
             case 'activate':
                 /*- Update State -*/
                 Manager::where('id', $user_id)
@@ -309,15 +353,32 @@ class ManagerPagesController extends Controller
     }
 
     public function showProducts(){
-
+        return view("portal.products")
+            ->with("products", Product::where([
+                ["state", "=", 1]
+            ])
+            ->with('skus.images', 'category')
+            ->get()
+            ->toArray());
     }
 
-    public function processProducts(){
+    public function showProduct($product_slug){
+        if (is_null(Product::where('slug', $product_slug)->first())) {
+            return redirect()->back()->with("error", "Product not found");
+        }
 
-    }
+        $product =  Product::
+        where('slug', $product_slug)
+        ->with('skus.images', 'category')
+        ->first()
+        ->toArray();
 
-    public function showProduct(){
+        
+        /*--- Category Options ---*/
+        $product["category_options"] = Category::orderBy('description')->where('level', 2)->get()->toArray();
 
+        return view("portal.view-product")
+            ->with("product", $product);
     }
 
     public function processProduct(){
@@ -325,11 +386,211 @@ class ManagerPagesController extends Controller
     }
 
     public function showAddProduct(){
-
+        return view('portal.add-product')
+            ->with('categories', Category::where('level', 2)->get()->toArray());
     }
 
-    public function processAddProduct(){
+    public function processAddProduct(AddProductRequest $request){
+        /*- check variant images -*/
+        $variantImages = 1; //no variant images | one image fits all
+        for ($i=1; $i < $request->newSKUCount; $i++) { 
+            if ((ucfirst(trim($request->input('variantDescription'.$i))) != "None") AND ($request->input('stock'.$i) >= 0)) {
+                if (!is_null(Input::file('variantImages'.$i))) {
+                    $variantImages = 0; //each variant has its image
+                    break;
+                }
+            }
+        }
 
+        /*- validate variant images -*/
+        if ($variantImages == 1) {
+            /*-- validate only first set of images --*/
+            for ($j=0; $j < sizeof(Input::file('variantImages0')); $j++) { 
+                if(Input::file('variantImages0')[$j]->getClientOriginalExtension() != "jpg"){
+                    return back()->with("error", "Images must be of type jpg");
+                }
+    
+                list($width, $height) = getimagesize(Input::file('variantImages0')[$j]);
+                if ($width != $height or $height < 600) {
+                    return back()->with("error", "Images must be minimum height 600px with aspect ratio of 1");
+                }
+    
+                if(filesize(Input::file('variantImages0')[$j]) > 5000000){
+                    return back()->with("error", "One or more images exceed the allowed size for upload.");
+                }
+            }
+        } else {
+            /*-- validate all images --*/
+            for ($i=0; $i < $request->newSKUCount; $i++) { 
+                for ($j=0; $j < sizeof(Input::file('variantImages'.$i)); $j++) { 
+                    if(Input::file('variantImages'.$i)[$j]->getClientOriginalExtension() != "jpg"){
+                        return back()->with("error", "Images must be of type jpg");
+                    }
+        
+                    list($width, $height) = getimagesize(Input::file('variantImages'.$i)[$j]);
+                    if ($width != $height or $height < 600) {
+                        return back()->with("error", "Images must be minimum height 600px with aspect ratio of 1");
+                    }
+        
+                    if(filesize(Input::file('variantImages'.$i)[$j]) > 5000000){
+                        return back()->with("error", "One or more images exceed the allowed size for upload.");
+                    }
+                }
+            }
+        }
+
+        /*- Counts -*/
+        $count = Count::find(1);
+        
+        /*--- Validate and generate Product Slug ---*/
+        if((Product::where([
+            ['name', '=', $request->name]
+        ])->get()->count()) > 0){
+            $product_slug_count = Product::where([
+                ['name', '=', $request->name]
+            ])->get()->count();
+            $product_slug_count++;
+            $product_slug = str_slug($request->name)."-".$product_slug_count;
+        }else{
+            $product_slug = str_slug($request->name);
+        }
+
+        /*--- Generate product id and set detail variables ---*/
+        $count = Count::first();
+        $count->product++;
+
+        $product = New Product;
+        $product_id = "P-".date("Ymd")."-".$count->product;
+        $product->id = $product_id;
+        $product->name = ucwords(strtolower($request->name));
+        $product->slug = $product_slug;
+        $product->features = $request->features;
+        $product->cid = $request->category;
+        $product->description = $request->description;
+        $product->tags = $request->tags;
+        $product->views = 0;
+        $product->state = 1;
+
+        /*- Add SKUs -*/
+        $count->sku++;
+
+        /*- Save Default SKU -*/
+        $sku = new StockKeepingUnit;
+        $sku->id                        = $sku_id = "S-".($count->sku);
+        $sku->product_id            = $product_id;
+        $sku->description   = $request->input('variantDescription0');
+        $sku->stock_left            = $request->input('stock0');
+        $sku->save();
+
+        /*- Default SKU Images -*/
+        for ($i=0; $i < sizeof(Input::file('variantImages0')); $i++) { 
+            $sku_image = new SKUImage;
+            $sku_image->sku_id = $sku_id;
+            $sku_image->product_id = $product_id;
+            $sku_image->path = $sku->id.rand(1000, 9999);
+
+            $img = Image::make(Input::file('variantImages0')[$i]);
+
+            //save original image
+            $img->save('app/assets/img/products/original/'.$sku_image->path.'.jpg');
+
+            //save main image
+            $img->resize(600, 600);
+            // $img->insert('portal/images/watermark/stamp.png', 'center');
+            $img->save('app/assets/img/products/main/'.$sku_image->path.'.jpg');
+
+            //save thumbnail
+            $img->resize(300, 300);
+            $img->save('app/assets/img/products/thumbnail/'.$sku_image->path.'.jpg');
+
+            //store image details
+            $sku_image->save();
+        }
+
+        if ($variantImages == 1) {
+            /*-- For each sku, save the same images in db --*/
+            $default_sku_images = SKUImage::where('sku_id', $sku->id)->get()->toArray();
+
+            for ($i=1; $i < $request->newSKUCount; $i++) { 
+                if ((ucfirst(trim($request->input('variantDescription'.$i))) != "None") AND ($request->input('stock'.$i) >= 0)) {
+                    /*-- insert sku --*/
+                    $count->sku++;
+                    $sku = new StockKeepingUnit;
+                    $sku->id                        = $sku_id = "S-".($count->sku);
+                    $sku->product_id            = $product_id;
+                    $sku->description   = $request->input('variantDescription'.$i);
+                    $sku->stock_left            = $request->input('stock'.$i);
+                    $sku->save();
+
+                    /*-- save same images as default --*/
+                    for ($j=0; $j < sizeof($default_sku_images); $j++) { 
+                        $sku_image = new SKUImage;
+                        $sku_image->sku_id = $sku_id;
+                        $sku_image->product_id = $product_id;
+                        $sku_image->path = $default_sku_images[$j]["path"];
+                        $sku_image->save();
+                    }
+                }
+            }
+    
+        } else {
+            /*-- For each sku, save its unique images in db --*/
+            for ($i=1; $i < $request->newSKUCount; $i++) { 
+                if ((ucfirst(trim($request->input('variantDescription'.$i))) != "None") AND ($request->input('stock'.$i) >= 0)) {
+                    /*-- insert sku --*/
+                    $count->sku++;
+    
+                    $sku = new StockKeepingUnit;
+                    $sku->id                        = $sku_id = "S-".($count->sku);
+                    $sku->product_id            = $product_id;
+                    $sku->description   = $request->input('variantDescription'.$i);
+                    $sku->stock_left            = $request->input('stock'.$i);
+                    $sku->save();
+
+                    /*-- save unique images --*/
+                    for ($j=0; $j < sizeof(Input::file('variantImages'.$i)); $j++) { 
+                        $sku_image = new SKUImage;
+                        $sku_image->product_id = $product_id;
+                        $sku_image->sku_id = $sku_id;
+                        $sku_image->path = $sku->id.rand(1000, 9999);
+            
+                        $img = Image::make(Input::file('variantImages'.$i)[$j]);
+            
+                        //save original image
+                        $img->save('app/assets/img/products/original/'.$sku_image->path.'.jpg');
+            
+                        //save main image
+                        $img->resize(600, 600);
+                        // $img->insert('portal/images/watermark/stamp.png', 'center');
+                        $img->save('app/assets/img/products/main/'.$sku_image->path.'.jpg');
+            
+                        //save thumbnail
+                        $img->resize(300, 300);
+                        $img->save('app/assets/img/products/thumbnail/'.$sku_image->path.'.jpg');
+            
+                        //store image details
+                        $sku_image->save();
+                    }
+                }
+            }    
+        }
+        
+        /*- Save Product -*/
+        $product->save();
+        
+        /*- Save Counts -*/
+        $count->save();
+        /*- Log Activity Export and Clear -*/
+        activity()
+        ->causedBy(Manager::where('id', Auth::guard('manager')->user()->id)->get()->first())
+        ->tap(function(Activity $activity) {
+            $activity->subject_type = 'System';
+            $activity->subject_id = '0';
+            $activity->log_name = 'Product Added';
+        })
+        ->log(Auth::guard('manager')->user()->email.' added a product '.$product_id);
+
+        return back()->with("success", "Product ".$product->name." added successfully");
     }
 
     public function showCategories(){
@@ -340,9 +601,9 @@ class ManagerPagesController extends Controller
     }
 
 
-    public function showCategory($category_id){
-        $category = Category::where("id", $category_id)
-                    ->with("parent", "children", "products")
+    public function showCategory($category_slug){
+        $category = Category::where("slug", $category_slug)
+                    ->with("parent", "children", "products.skus.images")
                     ->get()
                     ->first()
                     ->toArray();
@@ -362,7 +623,7 @@ class ManagerPagesController extends Controller
             ->with("parents", $parents);
     }
 
-    public function processCategory(Request $request, $category_id){
+    public function processCategory(Request $request, $category_slug){
         switch ($request->category_action) {
             case 'update':
                 /*- Validation -*/
@@ -377,12 +638,12 @@ class ManagerPagesController extends Controller
                         ->withInput();
                 }
 
-                $category = Category::find($category_id);
+                $category = Category::where('slug', $category_slug)->get()->first();
                 $category_slug = str_slug($request->description);
 
                 /*- Check for duplicate category -*/
                 if (Category::where([
-                    ["id", "<>", $category_id],
+                    ["id", "<>", $category->id],
                     ["slug", "=", $category_slug]
                 ])->get()->count() > 0) {
                     return back()->with("error", "Category already exists.");
@@ -405,12 +666,12 @@ class ManagerPagesController extends Controller
                 ->log(Auth::guard('manager')->user()->email.' updated a category, '.ucwords($request->description));
 
                 /*- Return success -*/
-                return back()->with('success', 'Category successfully updated');
+                return redirect()->route('manager.show.category', $category_slug)->with('success', 'Category successfully updated');
 
                 break;
             
             case 'delete':
-                $category = Category::find($category_id);
+                $category = Category::where('slug', $category_slug)->get()->first();
                 $category_description = $category->description;
 
                 /*- Check for products -*/

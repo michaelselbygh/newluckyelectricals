@@ -13,7 +13,10 @@
                 <div class="col-md-4" style="text-align: right; margin-bottom:5px;">
                     @switch($user["state"]["id"])
                         @case(1)
-                            {{-- Active | Deactivate, Delete--}}
+                            {{-- Active | Reset Password, Deactivate, Delete--}}
+                            <button onclick="submitUserAction('reset_password')" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Reset {{ $user['first_name'] }}'s password" style="margin-top: 3px;" class="btn btn-info btn-sm round">
+                                <i class="ft-lock"></i>
+                            </button>
                             <button onclick="submitUserAction('deactivate')" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Deactivate {{ $user['first_name'] }}'s account" style="margin-top: 3px;" class="btn btn-warning btn-sm round">
                                 <i class="ft-alert-triangle"></i>
                             </button>
@@ -81,7 +84,7 @@
                                     <label for="role">Role</label>
                                     <select class="form-control {{ $errors->has('role') ? 'form-control is-invalid' : '' }}" name='role' style='border-radius:7px;' required>
                                         @for ($i = sizeof($roles)-1; $i >= 0 ; $i--)
-                                            <option value="{{ $roles[$i]['id'] }}" {{ $user['role'] == $roles[$i]['id'] ? 'selected' : '' }}>
+                                            <option value="{{ $roles[$i]['id'] }}" {{ $user['role']["id"] == $roles[$i]['id'] ? 'selected' : '' }}>
                                                 {{ $roles[$i]["name"] }}
                                             </option>
                                         @endfor

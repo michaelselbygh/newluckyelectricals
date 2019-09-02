@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-md-4" style="text-align: right; margin-bottom:5px;">
                     @if (sizeof($category["children"]) == 0 and sizeof($category["products"]) == 0)
-                        <form method="POST" action="{{ route('manager.process.category', $category['id']) }}">
+                        <form method="POST" action="{{ route('manager.process.category', $category['slug']) }}">
                                 @csrf
                                 <button  data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Delete Category" style="margin-top: 3px;" class="btn btn-danger btn-sm round">
                                     <i class="ft-trash"></i>
@@ -24,7 +24,7 @@
             @include('portal.success-and-error.message')
             <div class="card">
                 <div class="card-content" style="padding:20px;">
-                    <form method="POST" action="{{ route('manager.process.category', $category['id']) }}">
+                    <form method="POST" action="{{ route('manager.process.category', $category['slug']) }}">
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
@@ -92,7 +92,7 @@
                                         <tr>
                                                 <td>{{ $category['children'][$i]["description"] }}</td>
                                                 <td>
-                                                    <a href="{{ route('manager.show.category', $category['children'][$i]["id"]) }}">
+                                                    <a href="{{ route('manager.show.category', $category['children'][$i]["slug"]) }}">
                                                         <button data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="View {{ $category['children'][$i]["description"] }}"   class="btn btn-info btn-sm round">
                                                             <i class="ft-eye"></i>
                                                         </button>
@@ -115,41 +115,54 @@
             <div class="col-md-7">
                 <h5 class="card-title">Products under category, {{ $category['description'] }}</h5>
                 <div class="card">
-                    <div class="card-content" style="padding:20px;">
-                        <table class="table table-striped table-bordered zero-configuration" id="delivery-items">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Preview</th>
-                                    <th style="min-width: 100px;">Action</th>
-    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for ($i = 0; $i < sizeof($category['children']); $i++)
-                                <tr>
-                                        <td>{{ $category['products'][$i]["id"] }}</td>
-                                        <td>{{ $category['products'][$i]["name"] }}</td>
-                                        <td>Product Preview</td>
-                                        <td>
-                                            <a href="{{ route('manager.show.product', $category['products'][$i]["id"]) }}">
-                                                <button data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="View {{ $category['products'][$i]["name"] }}"   class="btn btn-info btn-sm round">
-                                                    <i class="ft-eye"></i>
-                                                </button>
-                                            </a>
-                                        </td>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard">
+                            <table class="table table-striped table-bordered zero-configuration" id="products">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Variations</th>
+                                        <th>Action</th>
                                     </tr>
-                                @endfor
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody> 
+                                    @for($i=0; $i<sizeof($category["products"]); $i++) 
+                                        <tr>
+                                            <td>{{ $category["products"][$i]["id"] }}</td>
+                                            <td>{{ $category["products"][$i]["name"] }}</td>
+                                            <td>
+                                                <ul class="list-unstyled users-list m-0">
+                                                    @for ($j = 0; $j < sizeof($category["products"][$i]["skus"]); $j++)
+                                                        <li data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="{{ $category["products"][$i]["skus"][$j]["description"] }}" class="avatar avatar-sm pull-up">
+                                                            <img class="media-object rounded-circle no-border-top-radius no-border-bottom-radius"
+                                                            src="{{ url("app/assets/img/products/thumbnail/".$category["products"][$i]["skus"][$j]["images"][0]["path"].".jpg") }}"
+                                                            alt="{{ $category["products"][$i]["skus"][$j]["description"] }}">
+                                                        </li>
+                                                    @endfor
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('manager.show.product', $category["products"][$i]["slug"]) }}">
+                                                    <button data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="View {{ $category["products"][$i]["name"] }}"  style="margin-top: 3px;" class="btn btn-info btn-sm round">
+                                                        <i class="ft-eye"></i>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endfor
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div> 
         @endif
     </div>
 
-    <form id="child-delete-form" method="POST" action="{{ route('manager.process.category', $category['id']) }}">
+    <form id="child-delete-form" method="POST" action="{{ route('manager.process.category', $category['slug']) }}">
         @csrf
         <input type="hidden" name="child_id" id="child_id" />
         <input id="category_action" type="hidden" name="category_action"  value="delete_child"/>

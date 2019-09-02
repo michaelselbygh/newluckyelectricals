@@ -84,15 +84,18 @@ class ManagerLoginController extends Controller
     }
 
     public function logout(){
-        /*--- log activity ---*/
-        activity()
-        ->causedBy(Manager::where('id', Auth::guard('manager')->user()->id)->get()->first())
-        ->tap(function(Activity $activity) {
-            $activity->subject_type = 'System';
-            $activity->subject_id = '0';
-            $activity->log_name = 'Manager Logout';
-        })
-        ->log(Auth::guard('manager')->user()->email.' logged out as a manager');
+        if (Auth::check()) {
+            /*--- log activity ---*/
+            activity()
+            ->causedBy(Manager::where('id', Auth::guard('manager')->user()->id)->get()->first())
+            ->tap(function(Activity $activity) {
+                $activity->subject_type = 'System';
+                $activity->subject_id = '0';
+                $activity->log_name = 'Manager Logout';
+            })
+            ->log(Auth::guard('manager')->user()->email.' logged out as a manager');
+        }
+        
 
         Auth::guard('manager')->logout();
         

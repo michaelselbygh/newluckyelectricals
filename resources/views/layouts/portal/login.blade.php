@@ -6,9 +6,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-        <meta name="description" content="KHRMS is super flexible, powerful, clean &amp; modern web application for human resource management.">
-        <meta name="keywords" content="human resource management, payroll, loans">
-        <meta name="author" content="Kalami Tech">
+        <meta name="description" content="Manage NewLucky Electricals">
+        <meta name="author" content="Michael Selby">
         <title> Login to NLE Manager Portal </title>
         <link rel="apple-touch-icon" href="../portal/images/ico/apple-icon-120.png">
         <link rel="shortcut icon" type="image/x-icon" href="../portal/images/ico/favicon-32.png">

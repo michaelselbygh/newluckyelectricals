@@ -14,7 +14,7 @@ class ManagersTableSeeder extends Seeder
         \DB::table('managers')->insert([
             'first_name' => 'Michael',
             'last_name' => 'Selby',
-            'email' => 'michaelselbygh@gmail.com',
+            'email' => 'dev@michaelselby.me',
             'password' => bcrypt('admin2019'),
             'role' => '1',
             'state' => '1',

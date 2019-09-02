@@ -46,7 +46,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('manager.show.category', $categories[$i]["id"]) }}">
+                                                <a href="{{ route('manager.show.category', $categories[$i]["slug"]) }}">
                                                     <button data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="View {{ $categories[$i]["description"] }}"  style="margin-top: 3px;" class="btn btn-info btn-sm round">
                                                         <i class="ft-eye"></i>
                                                     </button>

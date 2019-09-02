@@ -37,7 +37,7 @@
                     </ul>
                 </li>
                 @if (Auth::user()->role <= 2)
-                    <li class=" nav-item"><a href="{{ route('manager.show.users') }}"><i class="la la-user" ></i><span class="menu-title">Users</span></a>
+                    <li class=" nav-item"><a href="{{ route('manager.show.users') }}"><i class="la la-users" ></i><span class="menu-title">Users</span></a>
                         <ul class="menu-content">
                             <li>
                                 <a class="menu-item" href="{{ route('manager.show.users') }}">

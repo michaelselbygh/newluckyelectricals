@@ -44,16 +44,16 @@ Route::prefix('portal')->group(function(){
         Route::post('/products', 'ManagerPagesController@processProducts')->name('manager.process.products');
         Route::get('/product/add', 'ManagerPagesController@showAddProduct')->name('manager.show.add.product');
         Route::post('/product/add', 'ManagerPagesController@processAddProduct')->name('manager.process.add.product');
-        Route::get('/product/{product_id}', 'ManagerPagesController@showProduct')->name('manager.show.product');
-        Route::post('/product/{product_id}', 'ManagerPagesController@processProduct')->name('manager.process.product');
+        Route::get('/product/{product_slug}', 'ManagerPagesController@showProduct')->name('manager.show.product');
+        Route::post('/product/{product_slug}', 'ManagerPagesController@processProduct')->name('manager.process.product');
 
         /*--- categories ---*/
         Route::get('/categories', 'ManagerPagesController@showCategories')->name('manager.show.categories');
         Route::post('/categories', 'ManagerPagesController@processCategories')->name('manager.process.categories');
         Route::get('/category/add', 'ManagerPagesController@showAddCategory')->name('manager.show.add.category');
         Route::post('/category/add', 'ManagerPagesController@processAddCategory')->name('manager.process.add.category');
-        Route::get('/category/{category_id}', 'ManagerPagesController@showCategory')->name('manager.show.category');
-        Route::post('/category/{category_id}', 'ManagerPagesController@processCategory')->name('manager.process.category');
+        Route::get('/category/{category_slug}', 'ManagerPagesController@showCategory')->name('manager.show.category');
+        Route::post('/category/{category_slug}', 'ManagerPagesController@processCategory')->name('manager.process.category');
 
         /*--- site settings ---*/
         Route::get('/settings', 'ManagerPagesController@showSettings')->name('manager.show.settings');
