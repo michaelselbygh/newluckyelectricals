@@ -42,6 +42,17 @@
                 padding-right: 30px; /* maximum width of scrollbar */
                 overflow-y: scroll;
             }
+
+            .hidescroll {
+                max-height: 550px;
+                overflow-y: scroll;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none;  /* IE 10+ */
+            }
+            .hidescroll::-webkit-scrollbar { /* WebKit */
+                width: 0;
+                height: 0;
+            }
         </style>
 
     </head>
