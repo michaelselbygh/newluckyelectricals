@@ -69,9 +69,10 @@ Route::get('/shop/{product_slug}', 'MainPagesController@showProduct')->name('pro
 Route::get('/shop/category/{category_slug}', 'MainPagesController@showCategory')->name('category');
 Route::get('/shop', 'MainPagesController@showShop')->name('shop');
 Route::post('/shop', 'MainPagesController@filterShop')->name('shop.filter');
-Route::post('/about-us', 'MainPagesController@showAboutUs')->name('about-us');
-Route::post('/contact-us', 'MainPagesController@showContactUs')->name('contact-us');
-Route::post('/locate-a-store', 'MainPagesController@showLocateAStore')->name('locate-a-store');
+Route::get('/about-us', 'MainPagesController@showAboutUs')->name('about-us');
+Route::get('/contact-us', 'MainPagesController@showContactUs')->name('contact-us');
+Route::post('/contact-us', 'MainPagesController@processContactForm')->name('process.contact');
+Route::get('/locate-a-store', 'MainPagesController@showLocateAStore')->name('locate-a-store');
 Route::get('/', 'MainPagesController@home')->name('home');
 
 

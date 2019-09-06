@@ -174,6 +174,10 @@
                                         <a href="{{ route('home') }}"><img src="{{ url('portal/images/logo/logo.png') }}" style="height: 25px;" title="New Lucky Logo" alt="New Lucky Logo" /></a>
                                     </div>
                                     <p><i>...Where Quality Costs Less</i></p>
+                                    <br>
+                                    <h3 class="modtitle" style="margin-bottom: 5px;">Working Hours</h3>
+                                    Monday - Fridays, 8am - 6pm<br>
+                                    Saturdays, 8am - 4pm
 								</div>
 							</div>
 							<div class="col-sm-6 col-md-3 box-service">
@@ -219,8 +223,8 @@
 				<div class="footer-bottom-block ">
 					<div class=" container">
 						<div class="row">
-							<div class="col-sm-5 copyright-text"> © {{ date('Y') }} New Lucky Electricals. All Rights Reserved. </div>
-							<div class="col-sm-7" style="text-align:right">
+							<div class="col-sm-12 copyright-text" style="text-align:center"> © {{ date('Y') }} New Lucky Electricals. All Rights Reserved. </div>
+							<div class="col-sm-12" style="text-align:center">
                                 Designed and Built by <a href="{{ url('https://www.michaelselby.me') }}" target="_blank" style="color: #ffdd1a;">Michael Selby Creative Studio</a>
 							</div>
 							<!--Back To Top-->
