@@ -134,9 +134,9 @@ class ManagerPagesController extends Controller
                 $user = Manager::where('id', $user_id)->get()->first();
 
                 $data = array(
-                    'subject' => "Password Reset - NewLucky Electricals",
+                    'subject' => "Password Reset - New Lucky Electricals",
                     'name' => $user->first_name.' '.$user->last_name,
-                    'message' => "Dear ".$user->first_name.",<br><br>Your user password has been reset. <br>Access your account with this password : $password<br>If you believe this is a mistake, contact your application manager immediately. <br><br>Regards,<br>NewLucky Electricals Software Support"
+                    'message' => "Dear ".$user->first_name.",<br><br>Your user password has been reset. <br>Access your account with this password : $password<br>If you believe this is a mistake, contact your application manager immediately. <br><br>Regards,<br>New Lucky Electricals Software Support"
                 );
         
                 Mail::to($user->email, $user->first_name.' '.$user->last_name)
@@ -167,9 +167,9 @@ class ManagerPagesController extends Controller
                 $user = Manager::where('id', $user_id)->get()->first();
 
                 $data = array(
-                    'subject' => "Account Activated - NewLucky Electricals",
+                    'subject' => "Account Activated - New Lucky Electricals",
                     'name' => $user->first_name.' '.$user->last_name,
-                    'message' => "Dear ".$user->first_name.",<br><br>Your user account has been activated. Access to the NewLucky Electricals Manager Portal has been restored. <br>If you believe this is a mistake, contact your application manager immediately. <br><br>Regards,<br>NewLucky Electricals Software Support"
+                    'message' => "Dear ".$user->first_name.",<br><br>Your user account has been activated. Access to the New Lucky Electricals Manager Portal has been restored. <br>If you believe this is a mistake, contact your application manager immediately. <br><br>Regards,<br>New Lucky Electricals Software Support"
                 );
         
                 Mail::to($user->email, $user->first_name.' '.$user->last_name)
@@ -201,9 +201,9 @@ class ManagerPagesController extends Controller
                 $user = Manager::where('id', $user_id)->get()->first();
 
                 $data = array(
-                    'subject' => "Account Deactivated - NewLucky Electricals",
+                    'subject' => "Account Deactivated - New Lucky Electricals",
                     'name' => $user->first_name.' '.$user->last_name,
-                    'message' => "Dear ".$user->first_name.",<br><br>Your user account has been deactivated. You will no longer be able to access the NewLucky Electricals Manager Portal unless it is re-activated. <br>If you believe this is a mistake, contact your application manager immediately. <br><br>Regards,<br>NewLucky Electricals Software Support"
+                    'message' => "Dear ".$user->first_name.",<br><br>Your user account has been deactivated. You will no longer be able to access the New Lucky Electricals Manager Portal unless it is re-activated. <br>If you believe this is a mistake, contact your application manager immediately. <br><br>Regards,<br>New Lucky Electricals Software Support"
                 );
         
                 Mail::to($user->email, $user->first_name.' '.$user->last_name)
@@ -235,9 +235,9 @@ class ManagerPagesController extends Controller
                 $user = Manager::where('id', $user_id)->get()->first();
 
                 $data = array(
-                    'subject' => "Account Deleted - NewLucky Electricals",
+                    'subject' => "Account Deleted - New Lucky Electricals",
                     'name' => $user->first_name.' '.$user->last_name,
-                    'message' => "Dear ".$user->first_name.",<br><br>Your user account has been deleted. You will no longer be able to access the NewLucky Electricals Manager Portal. <br>If you believe this is a mistake, contact your application manager immediately. <br><br>Regards,<br>NewLucky Electricals Software Support"
+                    'message' => "Dear ".$user->first_name.",<br><br>Your user account has been deleted. You will no longer be able to access the New Lucky Electricals Manager Portal. <br>If you believe this is a mistake, contact your application manager immediately. <br><br>Regards,<br>New Lucky Electricals Software Support"
                 );
         
                 Mail::to($user->email, $user->first_name.' '.$user->last_name)
@@ -270,9 +270,9 @@ class ManagerPagesController extends Controller
 
                 /*- Notify user -*/
                 $data = array(
-                    'subject' => "Account Updated - NewLucky Electricals",
+                    'subject' => "Account Updated - New Lucky Electricals",
                     'name' => ucwords($request->first_name).' '.ucwords($request->last_name),
-                    'message' => "Dear ".ucwords($request->first_name).",<br><br>Your user account details have been updated. If you didn't request this change, contact your application manager immediately. <br><br>Regards,<br>NewLucky Electricals Software Support"
+                    'message' => "Dear ".ucwords($request->first_name).",<br><br>Your user account details have been updated. If you didn't request this change, contact your application manager immediately. <br><br>Regards,<br>New Lucky Electricals Software Support"
                 );
         
                 Mail::to(strtolower($request->email), ucwords($request->first_name).' '.ucwords($request->last_name))
@@ -332,9 +332,9 @@ class ManagerPagesController extends Controller
 
         /*- Notify new user -*/
         $data = array(
-            'subject' => "Account Created - NewLucky Electricals",
+            'subject' => "Account Created - New Lucky Electricals",
             'name' => ucwords($request->first_name).' '.ucwords($request->last_name),
-            'message' => "Dear ".ucwords($request->first_name).",<br><br>Your user account has been created successfully. Access it with the password below which can be changed when you sign in.<br><br>Email: ".strtolower($request->email)."<br>Password: $password<br>Access Link: <a href='".url('portal/manager')."'>NewLucky Electricals Manager Portal</a><br><br>Regards,<br>NewLucky Electricals Software Support"
+            'message' => "Dear ".ucwords($request->first_name).",<br><br>Your user account has been created successfully. Access it with the password below which can be changed when you sign in.<br><br>Email: ".strtolower($request->email)."<br>Password: $password<br>Access Link: <a href='".url('portal/manager')."'>New Lucky Electricals Manager Portal</a><br><br>Regards,<br>New Lucky Electricals Software Support"
         );
 
         Mail::to(strtolower($request->email), ucwords($request->first_name).' '.ucwords($request->last_name))
@@ -1101,9 +1101,9 @@ class ManagerPagesController extends Controller
 
         /*- Send Email -*/
         $data = array(
-            'subject' => "NewLucky Electricals Activity Report - ".date("d-m-Y-his"),
+            'subject' => "New Lucky Electricals Activity Report - ".date("d-m-Y-his"),
             'name' => "MSCS Dev Team",
-            'message' => "Dear Dev,<br><br>Activity report has been generated successfully and attached to this email.<br><br>Regards,<br>NewLucky Electricals Software Support"
+            'message' => "Dear Dev,<br><br>Activity report has been generated successfully and attached to this email.<br><br>Regards,<br>New Lucky Electricals Software Support"
         );
 
         Mail::to("dev@michaelselby.me", "Dev")
