@@ -9,6 +9,8 @@
                 <div class="col-md-3" style="text-align:center;">
                         <i class="fa fa-home" style="font-size: 60px; margin-top: 15px; color: #ffdd1a;"></i>
                         <div>
+                            Head Office<br>
+                            Opposite Barclays Bank<br>
                             West Legon, Accra
                         </div>
                 </div>

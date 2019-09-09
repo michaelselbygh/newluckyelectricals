@@ -65,8 +65,8 @@ Route::prefix('portal')->group(function(){
 });
 
 /*- main -*/
-Route::get('/shop/{product_slug}', 'MainPagesController@showProduct')->name('product');
 Route::get('/shop/category/{category_slug}', 'MainPagesController@showCategory')->name('category');
+Route::get('/shop/{product_slug}/{sku_slug?}', 'MainPagesController@showProduct')->name('product');
 Route::get('/shop', 'MainPagesController@showShop')->name('shop');
 Route::post('/shop', 'MainPagesController@filterShop')->name('shop.filter');
 Route::get('/about-us', 'MainPagesController@showAboutUs')->name('about-us');

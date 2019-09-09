@@ -15,6 +15,6 @@ class StockKeepingUnit extends Model
 
     public function images()
     {
-        return $this->hasMany('App\SKUImage', 'sku_id', 'id');
+        return $this->hasMany('App\SKUImage', 'sku_id', 'id')->orderBy('id', 'asc');
     }
 }

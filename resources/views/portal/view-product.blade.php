@@ -10,6 +10,13 @@
                     <h5 class="card-title">Edit {{ $product['name'] }} Details</h5>
                 </div>
                 <div class="col-md-4" style="text-align: right; margin-bottom:5px;">
+                    <form method="POST" action="{{ route('manager.process.product', $product['slug']) }}" enctype="multipart/form-data">
+                        @csrf
+                        <button type="submit" data-toggle="tooltip" data-popup="tooltip-custom" data-original-title="Delete {{ $product['name'] }}"  style="margin-top: 3px;" class="btn btn-danger btn-sm round">
+                            <i class="ft-trash"></i>
+                        </button>
+                        <input type="hidden" name="product_action" value="delete_product"/>
+                    </form>
                 </div>
             </div>
             @include('portal.success-and-error.message')

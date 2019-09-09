@@ -6,6 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <meta property="og:image" content="{{ url('app/assets/img/logo-icon.jpg') }}">
         <meta name="author" content="Michael Selby">
         <title>{{ config('app.name') }} - @yield('page-title')</title>
         <link rel="apple-touch-icon" href="{{ url('portal/images/ico/apple-icon-120.png') }}">

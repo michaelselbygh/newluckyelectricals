@@ -784,41 +784,6 @@ $(document).ready(function() {
 		loadingIcon: '../html/image/theme/lazy-loader.gif',
 		galleryActiveClass: "active"
 	});
-	$('.large-image').magnificPopup({
-		items: [
-			{src: 'image/demo/shop/product/J9.jpg' },
-			{src: 'image/demo/shop/product/J6.jpg' },
-			{src: 'image/demo/shop/product/J5.jpg' },
-			{src: 'image/demo/shop/product/J4.jpg' },
-		],
-		gallery: { enabled: true, preload: [0,2] },
-		type: 'image',
-		mainClass: 'mfp-fade',
-		callbacks: {
-			open: function() {
-				
-				var activeIndex = parseInt($('#thumb-slider .img.active').attr('data-index'));
-				var magnificPopup = $.magnificPopup.instance;
-				magnificPopup.goTo(activeIndex);
-			}
-		}
-	});
-	$("#thumb-slider .owl2-item").each(function() {
-		$(this).find("[data-index='0']").addClass('active');
-	});
-	
-	$('.thumb-video').magnificPopup({
-	  type: 'iframe',
-	  iframe: {
-		patterns: {
-		   youtube: {
-			  index: 'youtube.com/', // String that detects type of video (in this case YouTube). Simply via url.indexOf(index).
-			  id: 'v=', // String that splits URL in a two parts, second part should be %id%
-			  src: '//www.youtube.com/embed/%id%?autoplay=1' // URL that will be set as a source for iframe. 
-				},
-			}
-		}
-	});
 	$('.product-options li.radio').click(function(){
 		$(this).addClass(function() {
 			if($(this).hasClass("active")) return "";

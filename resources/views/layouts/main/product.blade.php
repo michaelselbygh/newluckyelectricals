@@ -6,9 +6,9 @@
 		<title>{{ config('app.name') }} - @yield('page-title')</title>
 		<meta charset="utf-8">
 		<meta name="keywords" content="Electricals, Lighting, Pipes" />
+		<meta property="og:image" content="@yield('page-image')">
         <meta name="author" content="Michael Selby">
-		<meta name="description" content="Welcome to New Lucky Electricals, where quality costs less. Your one stop Shop for all your electrical items and accessories.">
-		<meta property="og:image" content="{{ url('app/assets/img/logo-icon.jpg') }}">
+        <meta name="description" content="New Lucky Electricals, where quality costs less.">
 		<!-- Mobile specific metas
 			============================================ -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -27,6 +27,8 @@
 		<link href="{{ url('main/js/owl-carousel/owl.carousel.css') }}" rel="stylesheet">
 		<link href="{{ url('main/css/themecss/lib.css') }}" rel="stylesheet">
 		<link href="{{ url('main/js/jquery-ui/jquery-ui.min.css') }}" rel="stylesheet">
+		<link href="{{ url('main/js/lightslider/lightslider.css"') }}" rel="stylesheet">
+		
 		<!-- Theme CSS
 			============================================ -->
 		<link href="{{ url('main/css/themecss/so_megamenu.css') }}" rel="stylesheet">
@@ -36,6 +38,24 @@
 		<link href="{{ url('main/css/header.css') }}" rel="stylesheet">
 		<link id="color_scheme" href="{{ url('main/css/home.css') }}" rel="stylesheet">
 		<link href="{{ url('main/css/responsive.css') }}" rel="stylesheet">
+		<style>
+			.rbtn {
+				border-radius: 5px !important;
+				margin-top: 2px;
+				margin-right: 3px;
+			}
+
+			#radioBtn .notActive{
+				color: #197852;
+				background-color: #fff;
+				border: 1px #197852 solid;
+			}
+
+			#radioBtn .active{
+				color: #fff;
+				background-color: #197852;
+			}
+		</style>
 	</head>
 	<body class="common-home res layout-home1">
 		<div id="wrapper" class="wrapper-full banners-effect-7">
@@ -252,11 +272,110 @@
 		<script type="text/javascript" src="{{ url('main/js/datetimepicker/bootstrap-datetimepicker.min.js') }}"></script>
 		<script type="text/javascript" src="{{ url('main/js/jquery-ui/jquery-ui.min.js') }}"></script>
 		<script type="text/javascript" src="{{ url('main/js/modernizr/modernizr-2.6.2.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url('main/js/lightslider/lightslider.js') }}"></script>
+		
 		<!-- Theme files
 			============================================ -->
 		<script type="text/javascript" src="{{ url('main/js/themejs/application.js') }}"></script>
 		<script type="text/javascript" src="{{ url('main/js/themejs/homepage.js') }}"></script>
 		<script type="text/javascript" src="{{ url('main/js/themejs/so_megamenu.js') }}"></script>
 		<script type="text/javascript" src="{{ url('main/js/themejs/addtocart.js') }}"></script>	
+		
+		<script type="text/javascript">
+
+			$(document).ready(function() {
+				var zoomCollection = '.large-image img';
+				$( zoomCollection ).elevateZoom({
+					zoomType    : "inner",
+					lensSize    :"200",
+					easing:true,
+					gallery:'thumb-slider-vertical',
+					cursor: 'pointer',
+					galleryActiveClass: "active"
+				});
+				
+				$('.product-options li.radio').click(function(){
+					$(this).addClass(function() {
+						if($(this).hasClass("active")) return "";
+						return "active";
+					});
+					
+					$(this).siblings("li").removeClass("active");
+					$(this).parent().find('.selected-option').html('<span class="label label-success">'+ $(this).find('img').data('original-title') +'</span>');
+				});
+				
+				var _isMobile = {
+				  iOS: function() {
+				   return navigator.userAgent.match(/iPhone/i);
+				  },
+				  any: function() {
+				   return (_isMobile.iOS());
+				  }
+				};
+				
+				$(".thumb-vertical-outer .next-thumb").click(function () {
+					$( ".thumb-vertical-outer .lSNext" ).trigger( "click" );
+				});
+	
+				$(".thumb-vertical-outer .prev-thumb").click(function () {
+					$( ".thumb-vertical-outer .lSPrev" ).trigger( "click" );
+				});
+	
+				$(".thumb-vertical-outer .thumb-vertical").lightSlider({
+					item: 3,
+					autoWidth: false,
+					vertical:true,
+					slideMargin: 15,
+					verticalHeight:340,
+					pager: false,
+					controls: true,
+					prevHtml: '<i class="fa fa-angle-up"></i>',
+					nextHtml: '<i class="fa fa-angle-down"></i>',
+					responsive: [
+						{
+							breakpoint: 1199,
+							settings: {
+								verticalHeight: 330,
+								item: 3,
+							}
+						},
+						{
+							breakpoint: 1024,
+							settings: {
+								verticalHeight: 235,
+								item: 2,
+								slideMargin: 5,
+							}
+						},
+						{
+							breakpoint: 768,
+							settings: {
+								verticalHeight: 340,
+								item: 3,
+							}
+						}
+						,
+						{
+							breakpoint: 480,
+							settings: {
+								verticalHeight: 100,
+								item: 1,
+							}
+						}
+		
+					]
+					
+				});
+	
+				
+				
+				// Product detial reviews button
+				$(".reviews_button,.write_review_button").click(function (){
+					var tabTop = $(".producttab").offset().top;
+					$("html, body").animate({ scrollTop:tabTop }, 1000);
+				});
+			});
+				
+		</script>
 	</body>
 </html>

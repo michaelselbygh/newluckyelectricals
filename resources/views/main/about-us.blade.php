@@ -1,5 +1,5 @@
 @extends('layouts.main.master')
-@section('page-title') Our Stores @endsection
+@section('page-title') About Us @endsection
 @section('page-content')
     <h3 style="text-align: center">About New Lucky Electricals</h3>
     <section class="so-spotlight1" style="padding-top: 30px; min-height: 450px;">

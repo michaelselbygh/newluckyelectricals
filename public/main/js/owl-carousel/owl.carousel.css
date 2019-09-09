@@ -117,6 +117,7 @@
 }
 
 .owl2-carousel .owl2-item {
+    /* width: 100px !important; */
     position: relative;
     min-height: 1px;
     float: left;

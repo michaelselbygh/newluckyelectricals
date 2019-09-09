@@ -1453,7 +1453,6 @@ STRUCTURE
   margin-bottom: 30px; }
   .module h3.modtitle {
     margin: 0  0 15px;
-    text-transform: capitalize;
     font-weight: bold; }
 
 .titleLine h3.modtitle {
@@ -1468,7 +1467,6 @@ STRUCTURE
   border-bottom: 1px solid #e6e6e6;
   line-height: 30px;
   margin: 0 0 10px;
-  text-transform: uppercase;
   position: relative; }
   .titleLine h3.modtitle:after {
     content: "";
@@ -1565,8 +1563,7 @@ STRUCTURE
   .filter-shopby legend, .filter-row legend {
     border: none;
     font-size: 13px;
-    margin: 0;
-    text-transform: uppercase; }
+    margin: 0; }
   .filter-shopby .checkboxes_list > li:not(:last-child), .filter-row .checkboxes_list > li:not(:last-child), .filter-shopby .simple_vertical_list li:not(:last-child), .filter-row .simple_vertical_list li:not(:last-child) {
     margin-bottom: 5px; }
   .filter-shopby .color_btn, .filter-row .color_btn {
@@ -1718,7 +1715,7 @@ STRUCTURE
     background: #ffdd1a; }
 
 .button_submit {
-  background: #ffdd1a;
+  background: #197852;
   color: white;
   margin-right: 5px; }
 
@@ -2604,10 +2601,10 @@ input[type="tel"], input[type="color"], .uneditable-input {
 
 .buttonGray {
   padding: 7px 12px;
-  background: #555555;
+  background: #197852;
   color: #fff;
   border-radius: 0;
-  border-color: #555555; }
+  border-color: #197852; }
   .buttonGray:hover {
     background: #ffdd1a;
     border-color: #ffdd1a;

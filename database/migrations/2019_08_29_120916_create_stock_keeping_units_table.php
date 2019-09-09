@@ -17,6 +17,7 @@ class CreateStockKeepingUnitsTable extends Migration
             $table->string('id', '10')->primary();
             $table->string('product_id', '30');
             $table->string('description');
+            $table->string('slug');
             $table->double('price')->nullable();
             $table->double('discount')->nullable();
             $table->integer('stock_left');

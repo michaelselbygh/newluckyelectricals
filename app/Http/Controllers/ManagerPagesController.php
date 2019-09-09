@@ -434,7 +434,7 @@ class ManagerPagesController extends Controller
                 for ($i=0; $i < $request->newSKUCount; $i++) { 
                     if (!is_null(Input::file('variantImages'.$i))) {
                         for ($j=0; $j < sizeof(Input::file('variantImages'.$i)); $j++) { 
-                            if(Input::file('variantImages'.$i)[$j]->getClientOriginalExtension() != "jpg"){
+                            if(!(Input::file('variantImages'.$i)[$j]->getClientOriginalExtension() == "jpg" OR Input::file('variantImages'.$i)[$j]->getClientOriginalExtension() == "jpeg")){
                                 return back()->with("error", "Images must be of type jpg");
                             }
                 
@@ -497,6 +497,7 @@ class ManagerPagesController extends Controller
                             $sku->id                        = $sku_id = "S-".($count->sku);
                             $sku->product_id            = $product->id;
                             $sku->description   = $request->input('variantDescription'.$i);
+                            $sku->slug   = str_slug($request->input('variantDescription'.$i));
                             $sku->stock_left            = $request->input('stock'.$i);
                             $sku->save();
         
@@ -579,8 +580,45 @@ class ManagerPagesController extends Controller
                 return back()->with("success", "Image(s) deleted successfully.");
 
                 break;
+            case "delete_product":
+                /*- select product */
+                $product = Product::where('slug', $product_slug)->get()->first();
+
+
+                /*- log product deletion -*/
+                activity()
+                ->causedBy(Manager::where('id', Auth::guard('manager')->user()->id)->get()->first())
+                ->tap(function(Activity $activity) {
+                    $activity->subject_type = 'System';
+                    $activity->subject_id = '0';
+                    $activity->log_name = "Product Deleted";
+                })
+                ->log(Auth::guard('manager')->user()->email." deleted product ".$product->name);
+                $product_name = $product->name;
+                $product_id = $product->id;
+                $product->delete();
+
+                /*- delete thumbnail and main images -*/
+                $main_image_path = "app/assets/img/products/main/";
+                $thumbnail_image_path = "app/assets/img/products/thumbnail/";
+
+                $images = SKUImage::where('product_id', $product_id)->get();
+                foreach ($images as $image) {
+                    /*- delete images  -*/
+                    File::delete($main_image_path.$image->path.'.jpg');
+                    File::delete($thumbnail_image_path.$image->path.'.jpg');
+
+                    /*- delete image record -*/
+                    SKUImage::where('id', $image->id)->delete();
+                }
+            
+
+                
+
+                /*- return back with success -*/
+                return redirect()->route('manager.show.products')->with("success", $product_name." deleted successfully.");
+
             default:
-                # code...
                 break;
         }
     }
@@ -606,7 +644,7 @@ class ManagerPagesController extends Controller
         if ($variantImages == 1) {
             /*-- validate only first set of images --*/
             for ($j=0; $j < sizeof(Input::file('variantImages0')); $j++) { 
-                if(Input::file('variantImages0')[$j]->getClientOriginalExtension() != "jpg"){
+                if(!(Input::file('variantImages0')[$j]->getClientOriginalExtension() == "jpg" OR Input::file('variantImages0')[$j]->getClientOriginalExtension() == "jpeg")){
                     return back()->with("error", "Images must be of type jpg");
                 }
     
@@ -623,7 +661,7 @@ class ManagerPagesController extends Controller
             /*-- validate all images --*/
             for ($i=0; $i < $request->newSKUCount; $i++) { 
                 for ($j=0; $j < sizeof(Input::file('variantImages'.$i)); $j++) { 
-                    if(Input::file('variantImages'.$i)[$j]->getClientOriginalExtension() != "jpg"){
+                    if(!(Input::file('variantImages'.$i)[$j]->getClientOriginalExtension() == "jpg" OR Input::file('variantImages'.$i)[$j]->getClientOriginalExtension() == "jpeg")){
                         return back()->with("error", "Images must be of type jpg");
                     }
         
@@ -679,6 +717,7 @@ class ManagerPagesController extends Controller
         $sku->id                        = $sku_id = "S-".($count->sku);
         $sku->product_id            = $product_id;
         $sku->description   = $request->input('variantDescription0');
+        $sku->slug   = str_slug($request->input('variantDescription0'));
         $sku->stock_left            = $request->input('stock0');
         $sku->save();
 
@@ -719,6 +758,7 @@ class ManagerPagesController extends Controller
                     $sku->id                        = $sku_id = "S-".($count->sku);
                     $sku->product_id            = $product_id;
                     $sku->description   = $request->input('variantDescription'.$i);
+                    $sku->slug   = str_slug($request->input('variantDescription'.$i));
                     $sku->stock_left            = $request->input('stock'.$i);
                     $sku->save();
 
@@ -744,6 +784,7 @@ class ManagerPagesController extends Controller
                     $sku->id                        = $sku_id = "S-".($count->sku);
                     $sku->product_id            = $product_id;
                     $sku->description   = $request->input('variantDescription'.$i);
+                    $sku->slug   = str_slug($request->input('variantDescription'.$i));
                     $sku->stock_left            = $request->input('stock'.$i);
                     $sku->save();
 
